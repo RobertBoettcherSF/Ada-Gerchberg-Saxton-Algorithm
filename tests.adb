@@ -1,6 +1,8 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Assertions; use Ada.Assertions;
+with Ada.Numerics;
 with Gerchberg_Saxton; use Gerchberg_Saxton;
+use Gerchberg_Saxton.Complex_Types; -- Makes Complex, Re, and Im fully visible
 
 procedure Tests is
    Tolerance : constant Real := 0.0001;
@@ -12,7 +14,9 @@ procedure Tests is
 
    function Is_Close (A, B : Complex) return Boolean is
    begin
-      return abs (A.Re - B.Re) < Tolerance and abs (A.Im - B.Im) < Tolerance;
+      -- Using Re() and Im() functions is the standard way to access 
+      -- components of the private Complex type in Ada.
+      return abs (Re (A) - Re (B)) < Tolerance and abs (Im (A) - Im (B)) < Tolerance;
    end Is_Close;
 
    -- Dummy arrays for testing
@@ -135,7 +139,7 @@ begin
       Energy : Real := 0.0;
    begin
       for I in C4_Out'Range loop
-         Energy := Energy + (C4_Out(I).Re**2 + C4_Out(I).Im**2);
+         Energy := Energy + (Re (C4_Out(I))**2 + Im (C4_Out(I))**2);
       end loop;
       Assert (Energy > 0.0, "Energy conservation violated");
    end;

@@ -85,7 +85,8 @@ package body Gerchberg_Saxton is
          -- Step 3: Replace Amplitude with Target Amplitude, keep phase
          for I in Field_Freq'Range loop
             declare
-               Current_Phase : Real := Complex_Math.Argument (Field_Freq (I));
+               -- Argument is in Complex_Types, which is visible directly
+               Current_Phase : Real := Argument (Field_Freq (I));
             begin
                Field_Freq (I) := Complex'(Target_Amp (I), 0.0) * Complex_Math.Exp (J * Current_Phase);
             end;
@@ -96,7 +97,7 @@ package body Gerchberg_Saxton is
 
          -- Step 5: Extract new phase for next iteration
          for I in Field_Space'Range loop
-            Phase (I) := Complex_Math.Argument (Field_Space (I));
+            Phase (I) := Argument (Field_Space (I));
          end loop;
       end loop;
 
@@ -138,7 +139,7 @@ package body Gerchberg_Saxton is
          -- Enforce Target Amplitude
          for I in Field_Freq'Range loop
             declare
-               Current_Phase : Real := Complex_Math.Argument (Field_Freq (I));
+               Current_Phase : Real := Argument (Field_Freq (I));
             begin
                Field_Freq (I) := Complex'(Target_Amp (I), 0.0) * Complex_Math.Exp (J * Current_Phase);
             end;
@@ -150,7 +151,7 @@ package body Gerchberg_Saxton is
          for I in Field_Space'Range loop
             -- Combine previous input with new output using feedback Beta
             Field_Space (I) := Prev_Space (I) - Complex'(Beta, 0.0) * Field_Space (I);
-            Phase (I) := Complex_Math.Argument (Field_Space (I));
+            Phase (I) := Argument (Field_Space (I));
             Prev_Space (I) := Field_Space (I); -- Save for next cycle
          end loop;
       end loop;
